@@ -67,11 +67,6 @@
 
 			}
 
-            function cartCountHTML () {
-                    let {count} = cartCount;
-                    return `${count}`
-            }
-
 			// Initialize
 			getPhotos().then(function (photos) {
 				render(app, photoHTML(photos));
