@@ -26,7 +26,75 @@
 
 
 		<script type="module">
-			// Codes goes here...
+            import {render} from 'https://cdn.jsdelivr.net/npm/reefjs@12/dist/reef.es.min.js';
+            import {getPhotos} from './components/api.js';
+			import {getCart} from'./components/cart.js';
+
+            // Get the #app element
+			let app = document.querySelector('#app');
+
+            	/**
+			 * The HTML string for when no photo is found
+			 * @return {String} The HTML string
+			 */
+			function noPhotoHTML () {
+				return `
+					<h1>Uh oh!</h1>
+					<p>This photos are missing. Sorry!</p>`;
+			}
+
+            function cartListingsHTML (photos) {
+
+                // If photos missing then something went wrong!
+				if (!photos) return noPhotoHTML();
+                
+                return `<table style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Product Name</th><th style="text-align:right">Sub Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>                    
+                            ${photos.map(function (photo, index) {
+                                return `<tr>
+                                           <td>
+                                            <ul style="list-style:none;padding-left:0">
+                                                <li><img alt="${photo.description}" src="${photo.url}" style="max-height:90px;" ></li>
+                                                <li>${photo.name}</li>
+                                            </ul>
+                                            </td>
+                                            <td style="text-align:right;">
+                                                &dollar;${photo.price}
+                                            </td>
+                                        </tr>
+                                        `
+                            }).join('')}
+                        <tbody>
+                        <tfoot>
+                            <tr>
+                                <td>TOTAL</td>
+                                <td style="text-align:right;">  
+                                    &dollar;${photos.reduce(function (total, photo) {
+                                    return total + photo.price; 
+                                },0)}</td>
+                            </tr>
+                        </tfoot>
+                    </tr>          
+                    </table>`
+            }
+
+            // Initialize
+			getPhotos().then(function (photos) {
+            /**
+			 * Filter array of photos to only show those in cart array
+			 * @return {Object} The Filtered photos object
+			 */
+                const cartPhotos = photos.filter(function (photo) {
+                   return photo.id in getCart() ? photo : '';
+                });
+                   
+				render(app, cartListingsHTML(cartPhotos));
+			});
 		</script>
 
 	</body>

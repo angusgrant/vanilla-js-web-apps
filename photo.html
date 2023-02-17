@@ -12,7 +12,7 @@
 		<nav class="nav">
 			<a class="logo" href="index.html"><strong>Sparrow Photography</strong></a>
 			<div class="nav-items">
-				<span aria-hidden="true">&#x1f6d2;</span> Cart <span id="cart-count"></span>
+				<a href="checkout.html"><span aria-hidden="true">&#x1f6d2;</span> Cart <span id="cart-count"></span></a>
 			</div>
 		</nav>
 
@@ -25,22 +25,13 @@
 
 
 		<script type="module">
-			//import {render} from 'https://cdn.jsdelivr.net/npm/reefjs@12/dist/reef.es.min.js';
-            import {component} from 'https://cdn.jsdelivr.net/npm/reefjs@12/dist/reef.es.min.js';
+			import {component} from 'https://cdn.jsdelivr.net/npm/reefjs@12/dist/reef.es.min.js';
 			import {getPhotos} from './components/api.js';
-			import {addToCart, inCart, getCartCount} from './components/cart.js';
-            
+			import {addToCart, inCart} from './components/cart.js';
 
-           // let cartHelp = store(cart);
-           // console.log('Angus' + JSON.stringify(cartHelp));
-
-			// Get the #app element
-			let app = document.querySelector('#app');
-            let cartCountElem = document.querySelector('#cart-count');
 
 			// Hold the photo data
 			let photos = [];
-
 
 			/**
 			 * Get the photo ID from the URL
@@ -71,18 +62,6 @@
 					<h1>Uh oh!</h1>
 					<p>This photo is missing. Sorry!</p>`;
 			}
-            //  /**
-			//  * The HTML string update for a change in count
-			//  * @return {String} The HTML string
-			//  */
-
-            // function updateCartCount () {
-            //     cartCountElem.innerHTML = cartCount;
-            // }   
-
-           
-
-        
 
 			/**
 			 * Generate an HTML of available photos
@@ -97,8 +76,6 @@
 				// Get the photo data
 				let photo = getPhotoByID(photos, id);
 				if (!photo) return noPhotoHTML();
-
-                //if (cartCount) updateCartCount();
 
 				// Update the document.title
 				document.title = `${photo.name} | ${document.title}`;
@@ -117,7 +94,6 @@
 					</p>`;
 
 			}
-      
 
 			/**
 			 * Handle click events
@@ -137,10 +113,9 @@
 			// Initialize
 			getPhotos().then(function (data) {
 				photos = data;
-                component(app, photoHTML);
-                component(cartCountElem, getCartCount);
+				component('#app', photoHTML);
 				document.addEventListener('click', clickHandler);
-
+    
 			});
 		</script>
 
